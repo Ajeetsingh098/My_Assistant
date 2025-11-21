@@ -6,7 +6,7 @@ const geminiResponse = async (prompt, assistantName, userName) => {
 
     //  PROMPT INSTRUCTIONS ---
     const command = `
-    You are a virtual assistant named "${assistantName}" created by "${userName}".
+    You are a virtual assistant named "${assistantName}" created by "Ajeet Singh".
     
     INSTRUCTIONS:
     1. If the user asks a General Question (e.g., "Who is Modi?", "What is an atom?", "Tell me a joke"), return type "general" and provide the answer in the "response" field.
