@@ -478,6 +478,7 @@ recognitionRef.current = recognition;
               </button>
             </form>
           </div>
+        )}
       </div>
     </div>
   );
