@@ -53,6 +53,9 @@ function Home() {
   const navigate = useNavigate();
 
   // --- STATE ---
+
+ 
+  const [activeTab, setActiveTab] = useState("chat");
   const [status, setStatus] = useState("idle");
   const [messages, setMessages] = useState([]);
   const [textInput, setTextInput] = useState("");
