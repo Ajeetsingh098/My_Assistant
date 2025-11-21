@@ -68,6 +68,11 @@ function Home() {
 
   const recognitionRef = useRef(null);
   const messagesEndRef = useRef(null);
+   const activeTabRef = useRef(activeTab);
+
+   useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
   
   // Initialize form
   useEffect(() => {
@@ -224,13 +229,14 @@ const speak = (text) => {
     } else {
         setVoice();
     }
-
-    utter.onend = () => { setStatus("idle"); startListening(); };
-  };
-
   
-
-
+ utter.onend = () => { 
+      setStatus("idle"); 
+      if (activeTabRef.current === 'voice') {
+        startListening(); 
+      }
+    };
+  };
   
   
   const executeCommand = (data, isVoice) => {
