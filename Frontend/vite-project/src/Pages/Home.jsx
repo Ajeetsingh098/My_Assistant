@@ -15,6 +15,30 @@ const UploadIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" heig
 const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
 const Spinner = () => <svg className="animate-spin h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>;
 
+
+const Typewriter = ({ text, speed = 15 }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  
+  useEffect(() => {
+    setDisplayedText(""); 
+    let i = 0;
+    const timer = setInterval(() => {
+      if (i < text.length) {
+       
+        setDisplayedText((prev) => prev + text.slice(i, i + 2));
+        i += 2; 
+      } else {
+        clearInterval(timer);
+      }
+    }, speed);
+    
+    return () => clearInterval(timer);
+  }, [text, speed]);
+
+ 
+  return <div className="whitespace-pre-wrap leading-relaxed">{displayedText}</div>;
+};
+
 function Home() {
   const { userData, setUserData, serverUrl, getGeminiResponse, loading } = useContext(userDataContext);
   const navigate = useNavigate();
@@ -35,6 +59,7 @@ function Home() {
 
   const recognitionRef = useRef(null);
   const messagesEndRef = useRef(null);
+  
   // Initialize form
   useEffect(() => {
     if (userData) {
@@ -49,7 +74,8 @@ function Home() {
     if (!loading && !userData) navigate("/signup", { replace: true });
   }, [loading, userData, navigate]);
 
-   useEffect(() => {
+  // Auto-Scroll Effect
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages]);
   
@@ -103,7 +129,7 @@ function Home() {
         finalImageUrl = uploadRes.data.secure_url;
       }
 
-     
+      
       await axios.post(`${serverUrl}/api/user/update`, {
         name: username,
         assistantName: assistantName,
@@ -147,7 +173,7 @@ function Home() {
       console.error("Logout error:", err);
     }
 
-   
+    
     setUserData(null);
     
   
@@ -315,12 +341,16 @@ function Home() {
              </button>
           </div>
         </div>
+        
+        {/* Message Container */}
         <div className="h-[500px] flex flex-col bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20">
             {messages.length === 0 && (<div className="flex flex-col items-center justify-center h-full text-gray-500 space-y-2"><div className="p-3 bg-white/5 rounded-full"><MicIcon /></div><p className="text-sm">No conversation yet.</p></div>)}
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white/10 text-gray-200 rounded-bl-none border border-white/5'}`}>{msg.text}</div>
+                <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white/10 text-gray-200 rounded-bl-none border border-white/5'}`}>
+                  {msg.role === 'ai' ? <Typewriter text={msg.text} /> : msg.text}
+                </div>
                 <span className="text-[10px] text-gray-500 mt-1 px-1">{msg.time}</span>
               </div>
             ))}
