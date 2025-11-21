@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useState } from 'react'
 export const userDataContext = createContext()
 
 function UserContext({ children }) {
-  const serverUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+  const serverUrl = import.meta.env.BACKEND_URL|| 'http://localhost:4000'
   
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true) // NEW: Prevents UI flicker
