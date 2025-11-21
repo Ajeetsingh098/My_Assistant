@@ -240,9 +240,6 @@ const speak = (text) => {
 
 
     
-
-
-    
     switch (data.type) {
       case "general": respond(data.response); break;
       case "youtube_search": respond(`Searching YouTube for ${searchTerm}`); window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerm)}`, "_blank"); break;
@@ -482,7 +479,13 @@ recognitionRef.current = recognition;
             </form>
 
 
+</div>
+      </div>
+    </div>
+  );
+}
 
+export default Home;
 
 
 
@@ -491,8 +494,8 @@ recognitionRef.current = recognition;
 
 
       
-      {/* /* {/* MAIN VISUALIZER */}
-      {/* <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6 relative z-10">
+      
+       {/* <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6 relative z-10">
         <div className="flex flex-col items-center justify-center space-y-8">
           <div className="relative group">
             <div className={`absolute -inset-1 rounded-full blur-xl opacity-75 transition-all duration-500 ${status === 'listening' ? 'bg-green-500' : status === 'speaking' ? 'bg-blue-500' : status === 'processing' ? 'bg-purple-500' : 'bg-gray-700'}`}></div>
@@ -514,8 +517,8 @@ recognitionRef.current = recognition;
           </div>
         </div>
         
-        {/* Message Container */}
-        {/* <div className="h-[500px] flex flex-col bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+       
+             <div className="h-[500px] flex flex-col bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20">
             {messages.length === 0 && (<div className="flex flex-col items-center justify-center h-full text-gray-500 space-y-2"><div className="p-3 bg-white/5 rounded-full"><MicIcon /></div><p className="text-sm">No conversation yet.</p></div>)}
             {messages.map((msg, idx) => (
@@ -531,20 +534,14 @@ recognitionRef.current = recognition;
           <form onSubmit={handleTextSubmit} className="p-4 bg-black/20 border-t border-white/5 flex gap-3">
             <input type="text" value={textInput} onChange={(e) => setTextInput(e.target.value)} placeholder="Type a command..." className="flex-1 bg-transparent border border-white/20 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 transition text-white placeholder-gray-500" />
             <button type="submit" className="p-2 bg-blue-600 rounded-full hover:bg-blue-500 transition shadow-lg disabled:opacity-50 text-white cursor-pointer" disabled={!textInput.trim()}><SendIcon /></button>
-          </form>  */} */}
+          </form>  */}
 
 
 
 
 
           
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default Home;
+        
 
 
 
