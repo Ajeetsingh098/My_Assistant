@@ -34,7 +34,7 @@ function Home() {
   const [fileToUpload, setFileToUpload] = useState(null);
 
   const recognitionRef = useRef(null);
-
+  const messagesEndRef = useRef(null);
   // Initialize form
   useEffect(() => {
     if (userData) {
@@ -49,6 +49,9 @@ function Home() {
     if (!loading && !userData) navigate("/signup", { replace: true });
   }, [loading, userData, navigate]);
 
+   useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   // --- geminidata ---
   const parseGeminiResponse = (raw) => {
     try {
@@ -319,7 +322,8 @@ function Home() {
                 <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white/10 text-gray-200 rounded-bl-none border border-white/5'}`}>{msg.text}</div>
                 <span className="text-[10px] text-gray-500 mt-1 px-1">{msg.time}</span>
               </div>
-            ))}
+            ))};
+            <div ref={messagesEndRef} />
           </div>
           <form onSubmit={handleTextSubmit} className="p-4 bg-black/20 border-t border-white/5 flex gap-3">
             <input type="text" value={textInput} onChange={(e) => setTextInput(e.target.value)} placeholder="Type a command..." className="flex-1 bg-transparent border border-white/20 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 transition text-white placeholder-gray-500" />
