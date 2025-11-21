@@ -185,7 +185,7 @@ function Home() {
   const handleLogout = async () => {
     try {
       if(serverUrl){
-      await axios.get(`${serverUrl}/api/auth/logout`, {
+      await axios.post(`${serverUrl}/api/auth/logout`, {
         credentials: "include",
       });
       }
