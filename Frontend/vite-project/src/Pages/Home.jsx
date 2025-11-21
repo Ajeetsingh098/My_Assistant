@@ -84,9 +84,11 @@ function Home() {
   }, [loading, userData, navigate]);
 
   // Auto-Scroll Effect
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages,status]);
+ useEffect(() => {
+    if (activeTab === 'chat') {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, status, activeTab]);
   
   // --- geminidata ---
   const parseGeminiResponse = (raw) => {
@@ -190,24 +192,57 @@ function Home() {
   };
 
  
-  const speak = (text) => {
+  // const speak = (text) => {
+  //   if (!text) return;
+  //   setStatus("speaking");
+  //   stopListening();
+  //   window.speechSynthesis.cancel();
+  //   const utter = new SpeechSynthesisUtterance(text);
+  //   const voices = window.speechSynthesis.getVoices();
+  //   const preferredVoice = voices.find(v => v.name.includes("Google US English")) || voices[0];
+  //   if (preferredVoice) utter.voice = preferredVoice;
+  //   utter.onend = () => { setStatus("idle"); startListening(); };
+  //   window.speechSynthesis.speak(utter);
+  // };
+
+const speak = (text) => {
     if (!text) return;
     setStatus("speaking");
     stopListening();
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => v.name.includes("Google US English")) || voices[0];
-    if (preferredVoice) utter.voice = preferredVoice;
+    
+    const setVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.name.includes("Google US English")) || voices[0];
+        if (preferredVoice) utter.voice = preferredVoice;
+        window.speechSynthesis.speak(utter);
+    };
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = setVoice;
+    } else {
+        setVoice();
+    }
+
     utter.onend = () => { setStatus("idle"); startListening(); };
-    window.speechSynthesis.speak(utter);
   };
 
+  
+
+
+  
+  
   const executeCommand = (data, isVoice) => {
     if (!data) { if (isVoice) speak("Sorry, I missed that."); return; }
     const respond = (text) => { addMessage("ai", text); if (isVoice) speak(text); else setStatus("idle"); };
     const searchTerm = data.video || data.query || "music";
 
+
+    
+
+
+    
     switch (data.type) {
       case "general": respond(data.response); break;
       case "youtube_search": respond(`Searching YouTube for ${searchTerm}`); window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerm)}`, "_blank"); break;
@@ -249,10 +284,23 @@ function Home() {
         handleUserRequest(transcript, true);
       }
     };
-    recognitionRef.current = recognition;
-    startListening();
+  //   recognitionRef.current = recognition;
+  //   startListening();
+  //   return () => recognitionRef.current?.stop();
+  // }, [userData]);
+
+recognitionRef.current = recognition;
+   
+    if (activeTab === 'voice') {
+      startListening();
+    } else {
+      stopListening();
+    }
     return () => recognitionRef.current?.stop();
-  }, [userData]);
+  }, [userData, activeTab]); 
+
+
+  
 
   const handleTextSubmit = (e) => { e.preventDefault(); handleUserRequest(textInput, false); setTextInput(""); };
   if (loading) return <div className="h-screen bg-black text-white flex items-center justify-center">Loading...</div>;
@@ -281,6 +329,27 @@ function Home() {
         </div>
       </nav>
 
+       {/* TAB TOGGLE */}
+      <div className="w-full flex justify-center mb-4 z-20 relative">
+        <div className="bg-white/10 p-1 rounded-full flex gap-1 backdrop-blur-md border border-white/5">
+          <button 
+            onClick={() => setActiveTab('chat')} 
+            className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${activeTab === 'chat' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+          >
+            <ChatIcon /> Chat
+          </button>
+          <button 
+            onClick={() => setActiveTab('voice')} 
+            className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${activeTab === 'voice' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+          >
+            <MicIcon /> Voice
+          </button>
+        </div>
+      </div>
+
+
+
+      
       {/* --- SETTINGS  --- */}
       {showSettings && (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
@@ -328,8 +397,102 @@ function Home() {
         </div>
       )}
 
-      {/* MAIN VISUALIZER */}
-      <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6 relative z-10">
+{/* delete    */}
+
+       {/* MAIN CONTENT AREA */}
+      <div className="flex-1 w-full max-w-6xl mx-auto p-4 flex items-center justify-center relative z-10">
+        
+        {/* 1. VOICE MODE VIEW */}
+        {activeTab === 'voice' && (
+          <div className="flex flex-col items-center justify-center space-y-10 animate-fadeIn w-full h-full">
+            <div className="relative group">
+              <div className={`absolute -inset-1 rounded-full blur-xl opacity-75 transition-all duration-500 ${status === 'listening' ? 'bg-green-500' : status === 'speaking' ? 'bg-blue-500' : status === 'processing' ? 'bg-purple-500' : 'bg-gray-700'}`}></div>
+              <div className="relative w-72 h-72 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white/10 shadow-2xl bg-black">
+                {userData?.assistantImage ? ( <img src={userData.assistantImage} alt="AI" className="w-full h-full object-cover opacity-90" /> ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-black"><div className={`w-48 h-48 rounded-full bg-linear-to-tr from-blue-600 to-purple-600 opacity-80 transition-all duration-1000 ${status === 'speaking' ? 'animate-pulse scale-110' : 'scale-100'}`}></div></div>
+                )}
+              </div>
+              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 px-8 py-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-full text-sm tracking-widest uppercase font-semibold shadow-xl text-white">{status}</div>
+            </div>
+            
+            <div className="text-center space-y-4 max-w-lg">
+              <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-white to-gray-400">I'm Listening</h2>
+              <p className="text-gray-400 text-lg">Just say "{userData?.assistantName || "Assistant"}" to wake me up, or tap the mic below.</p>
+            </div>
+
+            <button onClick={() => status === 'listening' ? stopListening() : startListening()} className={`p-6 rounded-full transition-all border border-white/10 shadow-lg transform hover:scale-105 cursor-pointer ${status === 'listening' ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}>
+               {status === 'listening' ? <MicIcon /> : <MicOffIcon />}
+            </button>
+          </div>
+        )}
+
+        {/* 2. CHAT MODE VIEW */}
+        {activeTab === 'chat' && (
+          <div className="w-full max-w-3xl h-[80vh] flex flex-col bg-[#1a1a2e]/80 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-fadeIn">
+            
+            {/* Header */}
+            <div className="p-4 border-b border-white/10 flex items-center gap-3 bg-white/5">
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-black border border-white/20">
+                 {userData?.assistantImage ? <img src={userData.assistantImage} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-xs bg-blue-600">AI</div>}
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">{userData?.assistantName || "Assistant"}</h3>
+                <p className="text-xs text-green-400 flex items-center gap-1"><span className="w-2 h-2 bg-green-500 rounded-full"></span> Online</p>
+              </div>
+            </div>
+
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/20">
+              {messages.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full text-gray-500 space-y-4">
+                  <div className="p-4 bg-white/5 rounded-full"><ChatIcon /></div>
+                  <p className="text-sm">Start a conversation...</p>
+                </div>
+              )}
+              {messages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] px-5 py-3 rounded-2xl text-sm shadow-md leading-relaxed ${
+                    msg.role === 'user' 
+                      ? 'bg-blue-600 text-white rounded-br-none' 
+                      : 'bg-white/10 text-gray-100 rounded-bl-none border border-white/5'
+                  }`}>
+                    {msg.role === 'ai' ? <Typewriter text={msg.text} /> : msg.text}
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <form onSubmit={handleTextSubmit} className="p-4 bg-black/40 border-t border-white/10 flex gap-3 items-center">
+              <input 
+                type="text" 
+                value={textInput} 
+                onChange={(e) => setTextInput(e.target.value)} 
+                placeholder="Type your message..." 
+                className="flex-1 bg-white/5 border border-white/10 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-blue-500 transition text-white placeholder-gray-500" 
+              />
+              <button 
+                type="submit" 
+                className="p-3 bg-blue-600 rounded-full hover:bg-blue-500 transition shadow-lg disabled:opacity-50 text-white cursor-pointer flex-shrink-0" 
+                disabled={!textInput.trim()}
+              >
+                <SendIcon />
+              </button>
+            </form>
+
+
+
+
+
+
+
+
+
+
+      
+      {/* /* {/* MAIN VISUALIZER */}
+      {/* <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6 relative z-10">
         <div className="flex flex-col items-center justify-center space-y-8">
           <div className="relative group">
             <div className={`absolute -inset-1 rounded-full blur-xl opacity-75 transition-all duration-500 ${status === 'listening' ? 'bg-green-500' : status === 'speaking' ? 'bg-blue-500' : status === 'processing' ? 'bg-purple-500' : 'bg-gray-700'}`}></div>
@@ -352,7 +515,7 @@ function Home() {
         </div>
         
         {/* Message Container */}
-        <div className="h-[500px] flex flex-col bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+        {/* <div className="h-[500px] flex flex-col bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20">
             {messages.length === 0 && (<div className="flex flex-col items-center justify-center h-full text-gray-500 space-y-2"><div className="p-3 bg-white/5 rounded-full"><MicIcon /></div><p className="text-sm">No conversation yet.</p></div>)}
             {messages.map((msg, idx) => (
@@ -368,7 +531,13 @@ function Home() {
           <form onSubmit={handleTextSubmit} className="p-4 bg-black/20 border-t border-white/5 flex gap-3">
             <input type="text" value={textInput} onChange={(e) => setTextInput(e.target.value)} placeholder="Type a command..." className="flex-1 bg-transparent border border-white/20 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 transition text-white placeholder-gray-500" />
             <button type="submit" className="p-2 bg-blue-600 rounded-full hover:bg-blue-500 transition shadow-lg disabled:opacity-50 text-white cursor-pointer" disabled={!textInput.trim()}><SendIcon /></button>
-          </form>
+          </form>  */} */}
+
+
+
+
+
+          
         </div>
       </div>
     </div>
