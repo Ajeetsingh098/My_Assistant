@@ -135,20 +135,20 @@ function Home() {
 
   const handleLogout = async () => {
     try {
-      if (serverUrl) {
-        await fetch(`${serverUrl}/api/auth/logout`, {
-          method: "GET",
-          credentials: "include",
-        });
-      }
+      
+      await axios.post(`${serverUrl}/api/auth/logout`, {}, {
+        withCredentials: true 
+      });
     } catch (err) {
-      console.error("logout error", err);
+      console.error("Logout error:", err);
     }
 
+   
     setUserData(null);
+    
+  
     navigate("/signup", { replace: true });
   };
-
 
  
   const speak = (text) => {
