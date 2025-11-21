@@ -16,17 +16,26 @@ const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height
 const Spinner = () => <svg className="animate-spin h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>;
 
 
-const Typewriter = ({ text, speed = 15 }) => {
+const Typewriter = ({ text, speed = 10 }) => {
   const [displayedText, setDisplayedText] = useState("");
   
   useEffect(() => {
+    if (!text) return;
+
+   
+    const cleanText = text
+      .replace(/\\n/g, '\n') 
+      .replace(/(\.)([A-Z])/g, '$1\n$2') 
+      .replace(/(?<!\n)\* /g, '\n* '); 
+
     setDisplayedText(""); 
     let i = 0;
+    
+  
     const timer = setInterval(() => {
-      if (i < text.length) {
-       
-        setDisplayedText((prev) => prev + text.slice(i, i + 2));
-        i += 2; 
+      if (i < cleanText.length) {
+        setDisplayedText((prev) => prev + cleanText.charAt(i));
+        i++; 
       } else {
         clearInterval(timer);
       }
@@ -35,8 +44,8 @@ const Typewriter = ({ text, speed = 15 }) => {
     return () => clearInterval(timer);
   }, [text, speed]);
 
- 
-  return <div className="whitespace-pre-wrap leading-relaxed">{displayedText}</div>;
+  
+  return <div className="whitespace-pre-wrap leading-relaxed break-words">{displayedText}</div>;
 };
 
 function Home() {
@@ -77,7 +86,7 @@ function Home() {
   // Auto-Scroll Effect
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages]);
+  }, [messages,status]);
   
   // --- geminidata ---
   const parseGeminiResponse = (raw) => {
