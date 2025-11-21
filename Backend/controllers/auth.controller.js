@@ -27,7 +27,8 @@ export const signUp = async (req, res) => {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
             sameSite: "None",
-            secure: true
+            secure: true,
+             path: "/" 
         })
         return res.status(201).json(user)
     } catch (error) {
@@ -58,7 +59,8 @@ export const login = async (req, res) => {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
              sameSite: "None",
-            secure: true
+            secure: true,
+             path: "/" 
         })
         return res.status(200).json(user)
     } catch (error) {
@@ -72,7 +74,8 @@ export const logOut = async (req, res) => {
   res.clearCookie('token', { 
     httpOnly: true,
     secure: true, 
-    sameSite:"None" 
+    sameSite:"None",
+     path: "/" 
   });
   res.status(200).json({ message: "Logged out successfully" });
    } catch (error) {
