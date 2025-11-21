@@ -50,8 +50,9 @@ function Home() {
   }, [loading, userData, navigate]);
 
    useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages]);
+  
   // --- geminidata ---
   const parseGeminiResponse = (raw) => {
     try {
