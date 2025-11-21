@@ -322,7 +322,7 @@ function Home() {
                 <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white/10 text-gray-200 rounded-bl-none border border-white/5'}`}>{msg.text}</div>
                 <span className="text-[10px] text-gray-500 mt-1 px-1">{msg.time}</span>
               </div>
-            ))};
+            ))}
             <div ref={messagesEndRef} />
           </div>
           <form onSubmit={handleTextSubmit} className="p-4 bg-black/20 border-t border-white/5 flex gap-3">
