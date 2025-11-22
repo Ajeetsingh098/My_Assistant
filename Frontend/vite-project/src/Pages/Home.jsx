@@ -265,7 +265,7 @@ const speak = (text) => {
 
       case "youtube_search": 
        
-        const searchRegex = new RegExp(`hey|${assistantName}|search|youtube|find|on|for`, "gi");
+        const searchRegex = new RegExp(`hey|${assistantName}|search|youtube|find|on|for|please`, "gi");
         const cleanYoutubeQuery = searchTerm.replace(searchRegex, "").trim();
         
         respond(`Searching YouTube for ${cleanYoutubeQuery}`); 
@@ -274,7 +274,7 @@ const speak = (text) => {
 
       case "youtube_play": 
      
-        const playRegex = new RegExp(`hey|${assistantName}|play|open`, "gi");
+        const playRegex = new RegExp(`hey|${assistantName}|play|open|youtube|please`, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
         respond(`Playing ${song}`); 
