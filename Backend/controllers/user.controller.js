@@ -41,35 +41,55 @@ export const updateAssistant = async (req, res) => {
     }
 }
 
+
+
 export const searchYoutube = async (req, res) => {
     try {
-        const { query } = req.query; 
+        const { query } = req.query;
+        if (!query) return res.status(400).json({ message: "Query required" });
 
-        if (!query) {
-            return res.status(400).json({ message: "Query is required" });
+       
+        const instances = [
+            "https://pipedapi.kavin.rocks",
+            "https://piped-api.privacy.com.de",
+            "https://api.piped.spot.sjv.io",
+            "https://pipedapi.drgns.space"
+        ];
+
+        let videoId = null;
+
+        
+        for (const instance of instances) {
+            try {
+                console.log(`Trying API: ${instance}...`);
+                const apiUrl = `${instance}/search?q=${encodeURIComponent(query)}&filter=music_videos`;
+                
+             
+                const response = await axios.get(apiUrl, { timeout: 2000 });
+
+                if (response.data && response.data.items && response.data.items.length > 0) {
+                  
+                    videoId = response.data.items[0].url.split("v=")[1];
+                    console.log(`Success on ${instance}. Video ID: ${videoId}`);
+                    break; 
+                }
+            } catch (err) {
+                console.log(`Failed on ${instance}: ${err.message}`);
+               
+            }
         }
 
-      
-        const apiUrl = `https://piped-api.privacy.com.de/search?q=${encodeURIComponent(query)}&filter=music_videos`;
-
-        const response = await axios.get(apiUrl);
-
-        if (response.data && response.data.items && response.data.items.length > 0) {
-            const firstVideo = response.data.items[0];
-          
-            const videoId = firstVideo.url.split("v=")[1];
-
+        if (videoId) {
             return res.status(200).json({ videoId });
         } else {
-            return res.status(404).json({ message: "No video found" });
+            return res.status(404).json({ message: "No video found on any server" });
         }
 
     } catch (error) {
-        console.error("YouTube Search Error:", error.message);
-        return res.status(500).json({ message: "Server Error fetching video" });
+        console.error("Critical Server Error:", error);
+        return res.status(500).json({ message: "Server Error" });
     }
 };
-
 
 
 
