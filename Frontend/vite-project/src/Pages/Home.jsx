@@ -57,7 +57,7 @@ function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  // --- NEW: State for Video Player ---
+
   const [videoPrompt, setVideoPrompt] = useState(null);
 
   // Settings Form
@@ -215,8 +215,8 @@ function Home() {
     };
   };
   
-  // --- EXECUTE COMMAND (FIXED) ---
-  const executeCommand = (data, isVoice) => {
+  // --- EXECUTE COMMAND ---
+  const executeCommand = async (data, isVoice) => {
     if (!data) { 
       if (isVoice) speak("Sorry, I missed that."); 
       return; 
