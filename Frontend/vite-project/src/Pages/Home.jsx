@@ -271,6 +271,11 @@ function Home() {
 
         } catch (error) {
             console.error("Video fetch failed:", error);
+          if (status === 404) {
+               alert("Error 404: The backend route '/api/user/youtube/search' does not exist. Check your routes file!");
+            } else if (status === 500) {
+               alert("Error 500: The backend failed to fetch the video from the API.");
+            }
             respond(`I couldn't play ${song} automatically, opening YouTube.`);
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
         }
