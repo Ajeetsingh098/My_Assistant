@@ -272,13 +272,18 @@ const speak = (text) => {
         window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(cleanYoutubeQuery)}`, "_blank"); 
         break;
 
-      case "youtube_play": 
-     
-        const playRegex = new RegExp(`hey|${assistantName}|play|open|youtube|please`, "gi");
+     case "youtube_play":
+        
+        const playRegex = new RegExp(`hey|${assistantName}|play|open|want|to|listen|youtube|please`, "gi");
+        
+       
         const song = searchTerm.replace(playRegex, '').trim();
         
-        respond(`Playing ${song}`); 
-        window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank"); 
+        respond(`Playing ${song}`);
+        
+      
+       
+        window.open(`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(song)}&autoplay=1`, "_blank");
         break;
 
       case "google_search": 
