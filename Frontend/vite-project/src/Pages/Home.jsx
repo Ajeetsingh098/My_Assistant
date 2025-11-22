@@ -245,8 +245,9 @@ function Home() {
         break;
 
         
-   case "youtube_play": 
-        const playRegex = new RegExp(`hey|${assistantName}|play|open|want|to|listen|youtube|please`, "gi");
+  case "youtube_play": 
+        
+        const playRegex = new RegExp(`hey|${assistantName}|play|open|want|to|listen|youtube|please| on | me`, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
         if (!song) {
@@ -254,24 +255,27 @@ function Home() {
              return;
         }
 
-        respond(`Running ${song}...`); 
+        respond(`Playing ${song}...`); 
 
         try {
-           
-            const response = await axios.get(`https://piped-api.privacy.com.de/search?q=${song}&filter=music_videos`);
+          
+            const proxyUrl = "https://api.allorigins.win/raw?url=";
+            const targetUrl = `https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(song)}&filter=music_videos`;
+            
+            const response = await axios.get(proxyUrl + encodeURIComponent(targetUrl));
             
             if (response.data && response.data.items.length > 0) {
                 const firstVideo = response.data.items[0];
+              
                 const videoId = firstVideo.url.split("v=")[1]; 
                 setVideoPrompt(videoId); 
             } else {
-               
                 respond(`I couldn't find a direct video for ${song}, opening search results.`);
                 window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
             }
         } catch (error) {
-           
             console.error("Video fetch failed", error);
+          
             respond(`I had trouble playing ${song} automatically, so I'm opening YouTube for you.`);
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
         }
