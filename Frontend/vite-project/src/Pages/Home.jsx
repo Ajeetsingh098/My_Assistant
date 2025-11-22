@@ -244,8 +244,7 @@ function Home() {
         window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(cleanYoutubeQuery)}`, "_blank"); 
         break;
 
-      case "youtube_play": 
-        // FIX: Play video in embedded overlay instead of new window
+     case "youtube_play": 
         const playRegex = new RegExp(`hey|${assistantName}|play|open|want|to|listen|youtube|please`, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
@@ -255,8 +254,26 @@ function Home() {
         }
 
         respond(`Playing ${song}`); 
-        setVideoPrompt(song); // Updates state to trigger the overlay
+
+        
+        try {
+           
+            const response = await axios.get(`https://pipedapi.kavin.rocks/search?q=${song}&filter=music_videos`);
+            
+            if (response.data && response.data.items.length > 0) {
+                const firstVideo = response.data.items[0];
+            
+                const videoId = firstVideo.url.split("v=")[1]; 
+                setVideoPrompt(videoId); // Store the ID, not the name
+            } else {
+                respond("I couldn't find that song.");
+            }
+        } catch (error) {
+            console.error("Video fetch failed", error);
+            respond("I had trouble finding the video ID.");
+        }
         break;
+        
 
       case "google_search": 
         const googleRegex = new RegExp(`hey|${assistantName}|google|search|find|for`, "gi");
@@ -306,7 +323,9 @@ function Home() {
     setStatus("processing");
     const raw = await getGeminiResponse(text);
     const data = parseGeminiResponse(raw);
-    executeCommand(data, isVoice);
+    // executeCommand(data, isVoice);
+    await executeCommand(data, isVoice);
+    
   };
 
   // --- SPEECH RECOGNITION ---
@@ -539,8 +558,8 @@ function Home() {
               ></iframe>
             </div>
             
-            <div className="p-4 bg-white/5">
-               <h3 className="text-white font-semibold text-lg">Playing: {videoPrompt}</h3>
+            <div className="p-4 bg-white/5 flex justify-between items-center">
+               <h3 className="text-white font-semibold text-lg">Playing Video</h3>
             </div>
           </div>
         </div>
