@@ -248,7 +248,7 @@ function Home() {
     
    case "youtube_play": 
        
-        const playRegex = new RegExp(`hey|${assistantName}|play|paying|playing|open|want|to|listen|youtube|please| on | me`, "gi");
+        const playRegex = new RegExp(`hey|${assistantName}|play|paying|playing|open|want|to|listen|youtube|please| on | me| and `, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
         if (!song) {
@@ -259,8 +259,8 @@ function Home() {
         respond(`Playing ${song}...`); 
 
         try {
-            
-            const response = await axios.get(`${serverUrl}/api/youtube/search?query=${song}`);
+          
+            const response = await axios.get(`${serverUrl}/api/user/youtube/search?query=${song}`);
             
             if (response.data && response.data.videoId) {
                 setVideoPrompt(response.data.videoId); 
@@ -275,7 +275,6 @@ function Home() {
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
         }
         break;
-
 
         
         
