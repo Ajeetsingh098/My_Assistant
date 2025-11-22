@@ -366,9 +366,8 @@ function Home() {
 
   return (
     <div className="min-h-screen w-full bg-linear-to-br from-gray-900 via-[#0f0f2e] to-black text-white font-sans relative overflow-hidden">
-      
       {/* Navbar */}
-      <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto relative z-20">
+      <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto relative z-20">
         <h1 className="text-xl font-bold tracking-wider bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-500">AI ASSISTANT</h1>
         <div className="relative">
           <button onClick={() => setShowDropdown(!showDropdown)} className="flex items-center gap-3 hover:bg-white/10 p-2 rounded-full transition border border-transparent hover:border-white/10 cursor-pointer">
