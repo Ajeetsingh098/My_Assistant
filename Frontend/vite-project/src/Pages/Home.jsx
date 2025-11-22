@@ -244,7 +244,8 @@ function Home() {
         window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(cleanYoutubeQuery)}`, "_blank"); 
         break;
 
-     case "youtube_play": 
+        
+   case "youtube_play": 
         const playRegex = new RegExp(`hey|${assistantName}|play|open|want|to|listen|youtube|please`, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
@@ -253,26 +254,31 @@ function Home() {
              return;
         }
 
-        respond(`Playing ${song}`); 
+        respond(`Running ${song}...`); 
 
-        
         try {
            
-            const response = await axios.get(`https://pipedapi.kavin.rocks/search?q=${song}&filter=music_videos`);
+            const response = await axios.get(`https://piped-api.privacy.com.de/search?q=${song}&filter=music_videos`);
             
             if (response.data && response.data.items.length > 0) {
                 const firstVideo = response.data.items[0];
-            
                 const videoId = firstVideo.url.split("v=")[1]; 
-                setVideoPrompt(videoId); // Store the ID, not the name
+                setVideoPrompt(videoId); 
             } else {
-                respond("I couldn't find that song.");
+               
+                respond(`I couldn't find a direct video for ${song}, opening search results.`);
+                window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
             }
         } catch (error) {
+           
             console.error("Video fetch failed", error);
-            respond("I had trouble finding the video ID.");
+            respond(`I had trouble playing ${song} automatically, so I'm opening YouTube for you.`);
+            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
         }
         break;
+
+
+        
         
 
       case "google_search": 
