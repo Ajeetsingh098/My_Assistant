@@ -2,7 +2,7 @@ import { response } from "express";
 import geminiResponse from "../gemini.js";
 import User from "../models/user.model.js";
 import moment from "moment/moment.js";
-
+import axios from "axios";
 
 export const getCurrentUser=async(req,res)=>{
     try {
@@ -40,6 +40,40 @@ export const updateAssistant = async (req, res) => {
         return res.status(400).json({ message: "update assistant error" });
     }
 }
+
+export const searchYoutube = async (req, res) => {
+    try {
+        const { query } = req.query; 
+
+        if (!query) {
+            return res.status(400).json({ message: "Query is required" });
+        }
+
+      
+        const apiUrl = `https://piped-api.privacy.com.de/search?q=${encodeURIComponent(query)}&filter=music_videos`;
+
+        const response = await axios.get(apiUrl);
+
+        if (response.data && response.data.items && response.data.items.length > 0) {
+            const firstVideo = response.data.items[0];
+          
+            const videoId = firstVideo.url.split("v=")[1];
+
+            return res.status(200).json({ videoId });
+        } else {
+            return res.status(404).json({ message: "No video found" });
+        }
+
+    } catch (error) {
+        console.error("YouTube Search Error:", error.message);
+        return res.status(500).json({ message: "Server Error fetching video" });
+    }
+};
+
+
+
+
+
 
 export const askToAssistant = async (req, res) => {
   try {
