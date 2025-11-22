@@ -184,19 +184,17 @@ function Home() {
 
   const handleLogout = async () => {
     try {
-      if(serverUrl){
-      await axios.post(`${serverUrl}/api/auth/logout`, {
-        credentials: "include",
-      });
+      if (serverUrl) {
+        await fetch(`${serverUrl}/api/auth/logout`, {
+          method: "GET",
+          credentials: "include",
+        });
       }
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error("logout error", err);
     }
 
-    
     setUserData(null);
-    
-  
     navigate("/signup", { replace: true });
   };
 
