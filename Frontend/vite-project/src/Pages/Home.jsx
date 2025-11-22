@@ -241,25 +241,85 @@ const speak = (text) => {
   };
   
   
-  const executeCommand = (data, isVoice) => {
-    if (!data) { if (isVoice) speak("Sorry, I missed that."); return; }
-    const respond = (text) => { addMessage("ai", text); if (isVoice) speak(text); else setStatus("idle"); };
+ const executeCommand = (data, isVoice) => {
+    if (!data) { 
+      if (isVoice) speak("Sorry, I missed that."); 
+      return; 
+    }
+
+    const respond = (text) => { 
+      addMessage("ai", text); 
+      if (isVoice) speak(text); 
+      else setStatus("idle"); 
+    };
+
     const searchTerm = data.video || data.query || "music";
-
-
     
+ 
+    const assistantName = userData?.assistantName || "Jarvis";
+
     switch (data.type) {
-      case "general": respond(data.response); break;
-      case "youtube_search": respond(`Searching YouTube for ${searchTerm}`); window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerm)}`, "_blank"); break;
-      case "youtube_play": const song = searchTerm.replace(/play|open/gi, '').trim(); respond(`Playing ${song}`); window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank"); break;
-      case "google_search": respond(`Searching Google for ${data.query || searchTerm}`); window.open(`https://www.google.com/search?q=${encodeURIComponent(data.query || searchTerm)}`, "_blank"); break;
-      case "weather_show": respond(`Checking weather for ${data.city}`); window.open(`https://www.google.com/search?q=weather+${encodeURIComponent(data.city)}`, "_blank"); break;
-      case "get_time": respond(`It is ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}`); break;
-      case "get_date": respond(`Today is ${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}`); break;
-      case "instagram_open": respond("Opening Instagram"); window.open("https://www.instagram.com", "_blank"); break;
-      case "facebook_open": respond("Opening Facebook"); window.open("https://www.facebook.com", "_blank"); break;
-      case "calculator_open": respond("Opening Calculator"); window.open("https://www.google.com/search?q=calculator", "_blank"); break;
-      default: respond(data.response || "I'm not sure how to handle that.");
+      case "general": 
+        respond(data.response); 
+        break;
+
+      case "youtube_search": 
+       
+        const searchRegex = new RegExp(`hey|${assistantName}|search|youtube|find|on|for`, "gi");
+        const cleanYoutubeQuery = searchTerm.replace(searchRegex, "").trim();
+        
+        respond(`Searching YouTube for ${cleanYoutubeQuery}`); 
+        window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(cleanYoutubeQuery)}`, "_blank"); 
+        break;
+
+      case "youtube_play": 
+     
+        const playRegex = new RegExp(`hey|${assistantName}|play|open`, "gi");
+        const song = searchTerm.replace(playRegex, '').trim();
+        
+        respond(`Playing ${song}`); 
+        window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank"); 
+        break;
+
+      case "google_search": 
+      
+        const googleRegex = new RegExp(`hey|${assistantName}|google|search|find|for`, "gi");
+        const cleanGoogleQuery = (data.query || searchTerm).replace(googleRegex, "").trim();
+        
+        respond(`Searching Google for ${cleanGoogleQuery}`); 
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(cleanGoogleQuery)}`, "_blank"); 
+        break;
+
+      case "weather_show": 
+        respond(`Checking weather for ${data.city}`); 
+        window.open(`https://www.google.com/search?q=weather+${encodeURIComponent(data.city)}`, "_blank"); 
+        break;
+
+      case "get_time": 
+        respond(`It is ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}`); 
+        break;
+
+      case "get_date": 
+        respond(`Today is ${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}`); 
+        break;
+
+      case "instagram_open": 
+        respond("Opening Instagram"); 
+        window.open("https://www.instagram.com", "_blank"); 
+        break;
+
+      case "facebook_open": 
+        respond("Opening Facebook"); 
+        window.open("https://www.facebook.com", "_blank"); 
+        break;
+
+      case "calculator_open": 
+        respond("Opening Calculator"); 
+        window.open("https://www.google.com/search?q=calculator", "_blank"); 
+        break;
+
+      default: 
+        respond(data.response || "I'm not sure how to handle that.");
     }
   };
 
