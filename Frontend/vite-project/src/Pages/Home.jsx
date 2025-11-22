@@ -245,9 +245,10 @@ function Home() {
         break;
 
         
-     case "youtube_play": 
+    
+   case "youtube_play": 
        
-        const playRegex = new RegExp(`hey|${assistantName}|play|playing|open|want|to|listen|youtube|please| on | me|hello|bro`, "gi");
+        const playRegex = new RegExp(`hey|${assistantName}|play|paying|playing|open|want|to|listen|youtube|please| on | me`, "gi");
         const song = searchTerm.replace(playRegex, '').trim();
         
         if (!song) {
@@ -258,27 +259,19 @@ function Home() {
         respond(`Playing ${song}...`); 
 
         try {
-        
-            const proxyUrl = "https://corsproxy.io/?";
-          
-            const targetUrl = `https://piped-api.privacy.com.de/search?q=${encodeURIComponent(song)}&filter=music_videos`;
             
-            const response = await axios.get(proxyUrl + encodeURIComponent(targetUrl));
-
-            if (response.data && response.data.items && response.data.items.length > 0) {
-                const firstVideo = response.data.items[0];
-             
-                const videoId = firstVideo.url.split("v=")[1]; 
-                setVideoPrompt(videoId); 
+            const response = await axios.get(`${serverUrl}/api/youtube/search?query=${song}`);
+            
+            if (response.data && response.data.videoId) {
+                setVideoPrompt(response.data.videoId); 
             } else {
-            
-                console.warn("API returned no videos");
-                respond(`I couldn't find ${song}, opening search results.`);
+                respond(`I couldn't find ${song}, opening YouTube.`);
                 window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
             }
+
         } catch (error) {
             console.error("Video fetch failed:", error);
-            respond(`I had trouble playing ${song} automatically, so I'm opening YouTube for you.`);
+            respond(`I couldn't play ${song} automatically, opening YouTube.`);
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`, "_blank");
         }
         break;
