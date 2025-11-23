@@ -326,16 +326,22 @@ function Home() {
   };
 
   
-  const handleUserRequest = async (text, isVoice = false) => {
+const handleUserRequest = async (text, isVoice = false) => {
+  
     if (!text.trim()) return;
     addMessage("user", text);
     setStatus("processing");
-    const raw = await getGeminiResponse(text);
+   
+    const history = messages.slice(-10).map((msg) => ({
+      role: msg.role === "ai" ? "model" : "user",
+      parts: [{ text: msg.text }] 
+    }));
+    const raw = await getGeminiResponse(text, history);
     const data = parseGeminiResponse(raw);
-    // executeCommand(data, isVoice);
     await executeCommand(data, isVoice);
-    
   };
+
+  
 
   // --- SPEECH RECOGNITION ---
   const startListening = () => { try { recognitionRef.current?.start(); setStatus("listening"); } catch(e){} };
