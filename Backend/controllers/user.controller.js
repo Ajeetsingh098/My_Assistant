@@ -97,17 +97,30 @@ export const searchYoutube = async (req, res) => {
 
 export const askToAssistant = async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const { prompt, history } = req.body; 
+    
     const user = await User.findById(req.userId);
-    user.history.push(prompt)
-    user.save()
-    const userName = user.name;
-    const assistantName = user.assistantName;
+    
+    if (user) {
+        user.history.push(prompt);
+        await user.save();
+    }
 
-    const result = await geminiResponse(prompt, assistantName, userName);
-   console.log("GEMINI RAW RESULT:", result);
+    const userName = user?.name || "User";
+    const assistantName = user?.assistantName || "Jarvis";
+    const result = await geminiResponse(prompt, history, assistantName, userName);
 
-// -------- SAFE CHECK --------
+    console.log("GEMINI RAW RESULT:", result);
+    res.send(result);
+
+  } catch (error) {
+    console.error("AskToAssistant Controller Error:", error);
+    res.status(500).send({ type: "general", response: "Something went wrong on the server." });
+  }
+};
+
+      
+// --------  CHECK --------
 if (!result || typeof result !== "string") {
   return res.status(400).json({
     message: "Assistant returned invalid result",
