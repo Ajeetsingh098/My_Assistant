@@ -13,7 +13,6 @@ function UserContext({ children }) {
   const refreshUser = async () => {
     setLoading(true);
     try {
-     
       const result = await axios.get(`${serverUrl}/api/user/current`, { withCredentials: true })
       setUserData(result.data)
       return result.data
@@ -25,9 +24,17 @@ function UserContext({ children }) {
     }
   }
 
-  const getGeminiResponse = async (prompt) => {
+
+  const getGeminiResponse = async (prompt, history = []) => {
     try {
-      const result = await axios.post(`${serverUrl}/api/user/asktoassistant`, { prompt }, { withCredentials: true })
+      const result = await axios.post(
+        `${serverUrl}/api/user/asktoassistant`, 
+        { 
+          prompt: prompt,
+          history: history 
+        }, 
+        { withCredentials: true }
+      )
       return result.data;
     } catch (error) {
       console.log("Gemini API error:", error);
