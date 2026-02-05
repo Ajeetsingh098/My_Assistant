@@ -32,17 +32,23 @@ System Architecture:-
 The application follows a standard client-server architecture with an added layer for AI processing:
 
 
-Client (React): Captures user input (text or voice) and manages the UI state.
+Client (React):
+<img width="1905" height="954" alt="Screenshot 2026-02-05 154913" src="https://github.com/user-attachments/assets/9d83b89f-d75d-4d8a-8497-87cb66622aa4" />
+<img width="1907" height="999" alt="Screenshot 2026-02-05 154850" src="https://github.com/user-attachments/assets/92a89ec4-b81b-400c-a2b4-8c19df2864f6" />
+<img width="1918" height="975" alt="Screenshot 2026-02-05 154825" src="https://github.com/user-attachments/assets/03fee4de-db18-4317-8ab4-e3eb1902e428" />
+<img width="1912" height="942" alt="Screenshot 2026-02-05 154755" src="https://github.com/user-attachments/assets/8b1f68c4-65b3-43b7-8c90-cf4478c01493" />
+   Captures user input (text or voice) and manages the UI state.
 
-Server (Node/Express): Handles authentication, database interactions, and bridges the gap to AI services.
+Server (Node/Express):   Handles authentication, database interactions, and bridges the gap to AI services.
 
-AI Engine: Processes natural language to provide automa<img width="1909" height="959" alt="Screenshot 2026-02-05 154652" src="https://github.com/user-attachments/assets/33d8948d-910c-4906-b38c-7b811cd03984" />
-ted, intelligent feedback.
-
-
-Project Structure:-<img width="1911" height="967" alt="Screenshot 2026-02-05 154634" src="https://github.com/user-attachments/assets/a72ddf5b-4dda-4102-bd97-bc9ce5be54c9" />
+AI Engine: Processes natural language to provide automated, intelligent feedback.
+<img width="1909" height="959" alt="Screenshot 2026-02-05 154652" src="https://github.com/user-attachments/assets/33d8948d-910c-4906-b38c-7b811cd03984" />
 
 
+
+<img width="1911" height="967" alt="Screenshot 2026-02-05 154634" src="https://github.com/user-attachments/assets/a72ddf5b-4dda-4102-bd97-bc9ce5be54c9" />
+
+Project Structure:-
 My_Assistant/
 ├── Backend/            # Node.js & Express server
 │   ├── controllers/    # API logic (user, assistant tasks)
