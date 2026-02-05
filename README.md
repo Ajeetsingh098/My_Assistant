@@ -1,12 +1,13 @@
 My Assistant 
-A full-stack AI-powered Virtual Assistant designed to streamline tasks through a clean UI and intelligent automation. Built with the MERN stack and styled with Tailwind CSS.
+                   A full-stack AI-powered Virtual Assistant designed to streamline tasks through a clean UI and intelligent automation. Built with the MERN stack                      and styled with Tailwind CSS.
 
  Live Demo: [my-assistant-1-wnpr.onrender.com](https://my-assistant-1-wnpr.onrender.com/login)
 
  Key Features:-
-                 User Authentication: Secure login and registration using JWT and Context API.
+ 
+                  User Authentication:  Secure login and registration using JWT and Context API.
 
-                 Intelligent Automation: (In Progress) AI-driven logic to process user queries and automate responses.
+                 Intelligent Automation:  AI-driven logic to process user queries and automate responses.
 
                  State Management: Efficient data handling across the app using Redux and React Context.
 
@@ -17,13 +18,14 @@ A full-stack AI-powered Virtual Assistant designed to streamline tasks through a
 
 
  Tech Stack:-
-                 Frontend: React.js (Vite),Redux & Context API,Tailwind CSS
+ 
+                  Frontend:  React.js (Vite),Redux & Context API,Tailwind CSS
 
                   Web Speech API (Planned for Voice)
 
-                 Backend: Node.js & Express.js
+                  Backend: Node.js & Express.js
 
-                 REST API architecture
+                  REST API architecture
                   AI Integration
 
                   Deployment:Render (Hosting)
@@ -31,7 +33,8 @@ A full-stack AI-powered Virtual Assistant designed to streamline tasks through a
 
 
 System Architecture:-
-                     The application follows a standard client-server architecture with an added layer for AI processing:
+
+                         The application follows a standard client-server architecture with an added layer for AI processing:
 
 
 
@@ -45,11 +48,12 @@ System Architecture:-
 
 Client (React):
 
-                 Captures user input (text or voice) and manages the UI state.
 
-                 Server (Node/Express):   Handles authentication, database interactions, and bridges the gap to AI services.
+                   Captures user input (text or voice) and manages the UI state.
 
-                  AI Engine:   Processes natural language to provide automated, intelligent feedback.
+                   Server (Node/Express):   Handles authentication, database interactions, and bridges the gap to AI services.
+
+                    AI Engine:   Processes natural language to provide automated, intelligent feedback.
 
 
 
@@ -59,7 +63,7 @@ Client (React):
 Project Structure:-
                      My_Assistant/
 
-                                    ├── Backend/            # Node.js & Express server
+                                     ├── Backend/            # Node.js & Express server
 
                                      │   ├── controllers/    # API logic (user, assistant tasks)
 
@@ -67,9 +71,9 @@ Project Structure:-
 
                                      │   └── routes/         # API endpoints
 
-                                      ├── Frontend/           # React application
+                                     ├── Frontend/           # React application
 
-                                      │   └── vite-project/   # Vite-powered frontend source
+                                     │   └── vite-project/   # Vite-powered frontend source
 
                                        └── README.md
 
@@ -84,4 +88,5 @@ Roadmap & Future Enhancements:-
 
 
 Author
+
                     Ajeet Singh - GitHub Profile
