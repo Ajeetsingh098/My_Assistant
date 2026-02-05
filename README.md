@@ -1,7 +1,7 @@
 My Assistant 
 A full-stack AI-powered Virtual Assistant designed to streamline tasks through a clean UI and intelligent automation. Built with the MERN stack and styled with Tailwind CSS.
 
- Live Demo: my-assistant-1-wnpr.onrender.com
+ Live Demo: [my-assistant-1-wnpr.onrender.com](https://my-assistant-1-wnpr.onrender.com/login)
 
  Key Features:-
 User Authentication: Secure login and registration using JWT and Context API.
